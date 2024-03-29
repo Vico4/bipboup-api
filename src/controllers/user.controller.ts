@@ -3,11 +3,13 @@ import { UserModel } from "../models/user.model";
 import bcrypt from "bcrypt";
 
 import { Request, Response } from "express";
+import { userCreationSchema } from "../validation/userValidation.schema";
+import { ZodError } from "zod";
 
 export const signup = async (req: Request, res: Response) => {
   try {
+    userCreationSchema.parse(req.body);
     const hash = await bcrypt.hash(req.body.password, 10);
-
     const user = await UserModel.create({
       email: req.body.email,
       password: hash,
@@ -28,6 +30,9 @@ export const signup = async (req: Request, res: Response) => {
       ),
     });
   } catch (error) {
+    if (error instanceof ZodError) {
+      res.status(400).json({ error });
+    }
     res.status(500).json({ error });
   }
 };
