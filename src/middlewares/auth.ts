@@ -22,7 +22,7 @@ export const authenticateAdmin = (
 };
 
 export const authenticateUser = (
-  req: Request & { connectedUser: string | number },
+  req: Request<{ userId: string; connectedUser: string | number }>,
   res: Response,
   next: NextFunction,
 ): void => {
@@ -32,7 +32,7 @@ export const authenticateUser = (
       token,
       process.env.JWTSECRET as Secret,
     ) as JwtPayload;
-    req.connectedUser = user.userId;
+    req.params.connectedUser = user.userId;
     next();
   } catch (error) {
     res.status(401).json({ error });

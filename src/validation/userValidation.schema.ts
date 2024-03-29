@@ -24,3 +24,17 @@ export const userCreationSchema = z.object({
     message: "waouh, that's a long derby name ! Mind using a shorter one ?",
   }),
 });
+
+export const userEditionSchema = z
+  .object({
+    email: z.string().email().optional(),
+    name: z
+      .string()
+      .max(24, {
+        message: "waouh, that's a long derby name ! Mind using a shorter one ?",
+      })
+      .optional(),
+  })
+  .refine((body) => body.email || body.name, {
+    message: "humm... looks like you have nothing to update -_(^^)_-",
+  });

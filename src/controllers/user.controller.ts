@@ -3,7 +3,10 @@ import { UserModel } from "../models/user.model";
 import bcrypt from "bcrypt";
 
 import { Request, Response } from "express";
-import { userCreationSchema } from "../validation/userValidation.schema";
+import {
+  userCreationSchema,
+  userEditionSchema,
+} from "../validation/userValidation.schema";
 import { ZodError } from "zod";
 
 export const signup = async (req: Request, res: Response) => {
@@ -19,6 +22,7 @@ export const signup = async (req: Request, res: Response) => {
     });
 
     res.status(201).json({
+      id: user._id,
       email: user.email,
       derbyName: user.derbyName,
       isAdmin: user.isAdmin,
@@ -48,6 +52,7 @@ export const login = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Incorrect login informations" });
     }
     res.status(200).json({
+      id: user._id,
       email: user.email,
       derbyName: user.derbyName,
       isAdmin: user.isAdmin,
@@ -58,6 +63,34 @@ export const login = async (req: Request, res: Response) => {
         { expiresIn: "7d" },
       ),
     });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};
+
+export const editUser = async (
+  req: Request<{ userId: string; connectedUser: string | number }>,
+  res: Response,
+) => {
+  try {
+    const { userId, connectedUser } = req.params;
+    if (userId !== connectedUser.toString()) {
+      return res
+        .status(401)
+        .json({ message: "You can't update another player's profile !" });
+    }
+
+    const updates = userEditionSchema.parse(req.body);
+
+    const updatedUser = await UserModel.findByIdAndUpdate(userId, updates, {
+      new: true,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    res.status(200).json(updatedUser);
   } catch (error) {
     res.status(500).json({ error });
   }
