@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 
 import { Request, Response } from "express";
 import {
+  manageAdminValidation,
   userCreationSchema,
   userEditionSchema,
 } from "../validation/userValidation.schema";
@@ -68,7 +69,7 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const editUser = async (
+export const editProfile = async (
   req: Request<{ userId: string; connectedUser: string | number }>,
   res: Response,
 ) => {
@@ -81,6 +82,29 @@ export const editUser = async (
     }
 
     const updates = userEditionSchema.parse(req.body);
+
+    const updatedUser = await UserModel.findByIdAndUpdate(userId, updates, {
+      new: true,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};
+
+export const manageAdminStatus = async (
+  req: Request<{ userId: string }>,
+  res: Response,
+) => {
+  try {
+    const { userId } = req.params;
+
+    const updates = manageAdminValidation.parse(req.body);
 
     const updatedUser = await UserModel.findByIdAndUpdate(userId, updates, {
       new: true,

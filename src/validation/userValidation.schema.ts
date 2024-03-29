@@ -38,3 +38,7 @@ export const userEditionSchema = z
   .refine((body) => body.email || body.name, {
     message: "humm... looks like you have nothing to update -_(^^)_-",
   });
+
+export const manageAdminValidation = z.object({
+  isAdmin: z.boolean(),
+});
