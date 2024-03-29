@@ -70,12 +70,15 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const editProfile = async (
-  req: Request<{ userId: string; connectedUser: string | number }>,
+  req: Request<{
+    userId: string;
+    connectedUser: { userId: string; isAdmin: boolean };
+  }>,
   res: Response,
 ) => {
   try {
     const { userId, connectedUser } = req.params;
-    if (userId !== connectedUser.toString()) {
+    if (userId !== connectedUser.userId.toString()) {
       return res
         .status(401)
         .json({ message: "You can't update another player's profile !" });
@@ -115,6 +118,34 @@ export const manageAdminStatus = async (
     }
 
     res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};
+
+export const deleteUser = async (
+  req: Request<{
+    userId: string;
+    connectedUser: { userId: string; isAdmin: boolean };
+  }>,
+  res: Response,
+) => {
+  try {
+    const { userId, connectedUser } = req.params;
+    if (userId !== connectedUser.userId.toString() && !connectedUser.isAdmin) {
+      return res.status(401).json({
+        message:
+          "You can't delete another player's profile if you are not an admin !",
+      });
+    }
+
+    const deletedUser = await UserModel.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(deletedUser);
   } catch (error) {
     res.status(500).json({ error });
   }

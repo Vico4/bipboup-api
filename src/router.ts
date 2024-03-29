@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  deleteUser,
   editProfile,
   login,
   manageAdminStatus,
@@ -14,5 +15,6 @@ router.post("/signup", signup);
 router.post("/login", login);
 router.patch("/:userId", authenticateUser, editProfile);
 router.patch("/admin/:userId", authenticateAdmin, manageAdminStatus);
+router.delete("/:userId", authenticateUser, deleteUser);
 
 export default router;

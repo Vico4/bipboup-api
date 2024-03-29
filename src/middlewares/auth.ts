@@ -22,7 +22,10 @@ export const authenticateAdmin = (
 };
 
 export const authenticateUser = (
-  req: Request<{ userId: string; connectedUser: string | number }>,
+  req: Request<{
+    userId: string;
+    connectedUser: { userId: string; isAdmin: boolean };
+  }>,
   res: Response,
   next: NextFunction,
 ): void => {
@@ -32,7 +35,7 @@ export const authenticateUser = (
       token,
       process.env.JWTSECRET as Secret,
     ) as JwtPayload;
-    req.params.connectedUser = user.userId;
+    req.params.connectedUser = user as { userId: string; isAdmin: boolean };
     next();
   } catch (error) {
     res.status(401).json({ error });
