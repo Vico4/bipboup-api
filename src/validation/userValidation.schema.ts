@@ -23,5 +23,4 @@ export const userCreationSchema = z.object({
   name: z.string().max(24, {
     message: "waouh, that's a long derby name ! Mind using a shorter one ?",
   }),
-  isAdmin: z.boolean(),
 });

@@ -14,7 +14,7 @@ export const signup = async (req: Request, res: Response) => {
       email: req.body.email,
       password: hash,
       derbyName: req.body.name,
-      isAdmin: req.body.isAdmin,
+      isAdmin: false,
       earnedPoints: 0,
     });
 
