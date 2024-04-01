@@ -112,10 +112,7 @@ export const editProfile = async (
   }
 };
 
-export const manageAdminStatus = async (
-  req: Request<AuthenticatedRequestParams>,
-  res: Response,
-) => {
+export const manageAdminStatus = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
 

@@ -12,6 +12,7 @@ import {
   getUserBets,
   updateBet,
 } from "./controllers/bet.controller";
+import { createGame } from "./controllers/game.controller";
 
 const router = express.Router();
 
@@ -26,5 +27,8 @@ router.delete("/user/:userId", authenticateUser, deleteUser);
 router.get("/bets", authenticateUser, getUserBets);
 router.post("/bets", authenticateUser, createBet);
 router.patch("/bets/:betId", authenticateUser, updateBet);
+
+// game routes
+router.post("/game", authenticateAdmin, createGame);
 
 export default router;
