@@ -14,6 +14,7 @@ import {
   ForbiddenActionError,
   BadLoginError,
 } from "../errors";
+import { AuthenticatedRequestParams } from "../interfaces/authenticatedRequestParams";
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -22,7 +23,7 @@ export const signup = async (req: Request, res: Response) => {
     const user = await UserModel.create({
       email: req.body.email,
       password: hash,
-      derbyName: req.body.name,
+      derbyName: req.body.derbyName,
       isAdmin: false,
       earnedPoints: 0,
     });
@@ -78,15 +79,12 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const editProfile = async (
-  req: Request<{
-    userId: string;
-    connectedUser: { userId: string; isAdmin: boolean };
-  }>,
+  req: Request<AuthenticatedRequestParams>,
   res: Response,
 ) => {
   try {
     const { userId, connectedUser } = req.params;
-    if (userId !== connectedUser.userId.toString()) {
+    if (userId !== connectedUser?.userId.toString()) {
       throw new ForbiddenActionError();
     }
 
@@ -115,7 +113,7 @@ export const editProfile = async (
 };
 
 export const manageAdminStatus = async (
-  req: Request<{ userId: string }>,
+  req: Request<AuthenticatedRequestParams>,
   res: Response,
 ) => {
   try {
@@ -141,15 +139,15 @@ export const manageAdminStatus = async (
 };
 
 export const deleteUser = async (
-  req: Request<{
-    userId: string;
-    connectedUser: { userId: string; isAdmin: boolean };
-  }>,
+  req: Request<AuthenticatedRequestParams>,
   res: Response,
 ) => {
   try {
     const { userId, connectedUser } = req.params;
-    if (userId !== connectedUser.userId.toString() && !connectedUser.isAdmin) {
+    if (
+      userId !== connectedUser?.userId.toString() &&
+      !connectedUser?.isAdmin
+    ) {
       throw new ForbiddenActionError();
     }
 

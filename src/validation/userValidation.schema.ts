@@ -20,7 +20,7 @@ export const userCreationSchema = z.object({
         containsSpecialChar(pw),
       { message: `password too simple, ${pwRequirement}` },
     ),
-  name: z.string().max(24, {
+  derbyName: z.string().max(24, {
     message: "waouh, that's a long derby name ! Mind using a shorter one ?",
   }),
 });
@@ -28,14 +28,14 @@ export const userCreationSchema = z.object({
 export const userEditionSchema = z
   .object({
     email: z.string().email().optional(),
-    name: z
+    derbyName: z
       .string()
       .max(24, {
         message: "waouh, that's a long derby name ! Mind using a shorter one ?",
       })
       .optional(),
   })
-  .refine((body) => body.email || body.name, {
+  .refine((body) => body.email || body.derbyName, {
     message: "humm... looks like you have nothing to update -_(^^)_-",
   });
 

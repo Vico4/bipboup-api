@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
+import { AuthenticatedRequestParams } from "../interfaces/authenticatedRequestParams";
 
 export const authenticateAdmin = (
-  req: Request,
+  req: Request<AuthenticatedRequestParams>,
   res: Response,
   next: NextFunction,
 ) => {
@@ -22,10 +23,7 @@ export const authenticateAdmin = (
 };
 
 export const authenticateUser = (
-  req: Request<{
-    userId: string;
-    connectedUser: { userId: string; isAdmin: boolean };
-  }>,
+  req: Request<AuthenticatedRequestParams>,
   res: Response,
   next: NextFunction,
 ): void => {
