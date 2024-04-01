@@ -41,4 +41,7 @@ router.get("/games", authenticateUser, getAllGames);
 router.get("/game/:gameId", authenticateUser, getGame);
 router.delete("/game/:gameId", authenticateAdmin, deleteGame);
 
+// game routes
+router.post("/game", authenticateAdmin, createGame);
+
 export default router;
