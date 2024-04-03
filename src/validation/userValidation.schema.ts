@@ -20,7 +20,25 @@ export const userCreationSchema = z.object({
         containsSpecialChar(pw),
       { message: `password too simple, ${pwRequirement}` },
     ),
-  name: z.string().max(24, {
+  derbyName: z.string().max(24, {
     message: "waouh, that's a long derby name ! Mind using a shorter one ?",
   }),
+});
+
+export const userEditionSchema = z
+  .object({
+    email: z.string().email().optional(),
+    derbyName: z
+      .string()
+      .max(24, {
+        message: "waouh, that's a long derby name ! Mind using a shorter one ?",
+      })
+      .optional(),
+  })
+  .refine((body) => body.email || body.derbyName, {
+    message: "humm... looks like you have nothing to update -_(^^)_-",
+  });
+
+export const manageAdminValidation = z.object({
+  isAdmin: z.boolean(),
 });
