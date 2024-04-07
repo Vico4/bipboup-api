@@ -12,6 +12,7 @@ import {
   getUserBets,
   updateBet,
 } from "./controllers/bet.controller";
+import { getRanking } from "./controllers/ranking.controller";
 
 const router = express.Router();
 
@@ -26,5 +27,8 @@ router.delete("/user/:userId", authenticateUser, deleteUser);
 router.get("/bets", authenticateUser, getUserBets);
 router.post("/bets", authenticateUser, createBet);
 router.patch("/bets/:betId", authenticateUser, updateBet);
+
+// ranking routes
+router.get("/ranking", authenticateUser, getRanking);
 
 export default router;
