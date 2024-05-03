@@ -43,5 +43,6 @@ router.delete("/game/:gameId", authenticateAdmin, deleteGame);
 
 // game routes
 router.post("/game", authenticateAdmin, createGame);
+router.patch("/game/:gameId", authenticateAdmin, updateGame);
 
 export default router;
