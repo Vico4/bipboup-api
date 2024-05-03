@@ -12,7 +12,7 @@ import {
   getUserBets,
   updateBet,
 } from "./controllers/bet.controller";
-import { createGame } from "./controllers/game.controller";
+import { createGame, updateGame } from "./controllers/game.controller";
 
 const router = express.Router();
 
@@ -30,5 +30,6 @@ router.patch("/bets/:betId", authenticateUser, updateBet);
 
 // game routes
 router.post("/game", authenticateAdmin, createGame);
+router.patch("/game/:gameId", authenticateAdmin, updateGame);
 
 export default router;
