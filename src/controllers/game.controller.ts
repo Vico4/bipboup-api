@@ -85,8 +85,17 @@ export const getGame = async (
   res: Response,
 ) => {
   try {
-    const games = await GameModel.findById(req.params.gameId);
-    return res.status(200).json(games);
+    const game = await GameModel.findById(req.params.gameId);
+    return res.status(200).json(game);
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+};
+
+export const deleteGame = async (req: Request, res: Response) => {
+  try {
+    const game = await GameModel.findByIdAndDelete(req.params.gameId);
+    return res.status(200).json(game);
   } catch (error) {
     return res.status(500).json({ error });
   }
