@@ -15,7 +15,12 @@ export const gameCreationSchema = z
   .object({
     team1: z.enum(teamNames),
     team2: z.enum(teamNames),
-    startTime: z.string().datetime({ offset: true }),
+    startTime: z
+      .string()
+      .datetime({ offset: true })
+      .refine((date) => new Date(date) > new Date(), {
+        message: "start time must be in the future !",
+      }),
   })
   .refine((body) => body.team1 !== body.team2, {
     message:
@@ -26,7 +31,13 @@ export const gameUpdateSchema = z
   .object({
     team1: z.enum(teamNames).optional(),
     team2: z.enum(teamNames).optional(),
-    startTime: z.string().datetime().optional(),
+    startTime: z
+      .string()
+      .datetime()
+      .refine((date) => new Date(date) > new Date(), {
+        message: "start time must be in the future !",
+      })
+      .optional(),
     scoreTeam1: z.number({ coerce: true }).optional(),
     scoreTeam2: z.number({ coerce: true }).optional(),
   })
