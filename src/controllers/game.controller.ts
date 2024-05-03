@@ -5,6 +5,7 @@ import {
   gameUpdateSchema,
 } from "../validation/gameValidation.schema";
 import { GameModel } from "../models/game.model";
+import { AuthenticatedRequestParams } from "../interfaces/authenticatedRequestParams";
 
 export const createGame = async (req: Request, res: Response) => {
   try {
@@ -61,8 +62,32 @@ export const updateGame = async (req: Request, res: Response) => {
     // to-do : trigger scores recalculations
   } catch (error) {
     if (error instanceof ZodError) {
-      res.status(400).json({ error });
+      return res.status(400).json({ error });
     }
-    res.status(500).json({ error });
+    return res.status(500).json({ error });
+  }
+};
+
+export const getAllGames = async (
+  req: Request<AuthenticatedRequestParams>,
+  res: Response,
+) => {
+  try {
+    const games = await GameModel.find();
+    return res.status(200).json(games);
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+};
+
+export const getGame = async (
+  req: Request<AuthenticatedRequestParams & { gameId: string }>,
+  res: Response,
+) => {
+  try {
+    const games = await GameModel.findById(req.params.gameId);
+    return res.status(200).json(games);
+  } catch (error) {
+    return res.status(500).json({ error });
   }
 };

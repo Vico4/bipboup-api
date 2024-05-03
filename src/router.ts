@@ -12,7 +12,12 @@ import {
   getUserBets,
   updateBet,
 } from "./controllers/bet.controller";
-import { createGame, updateGame } from "./controllers/game.controller";
+import {
+  createGame,
+  updateGame,
+  getAllGames,
+  getGame,
+} from "./controllers/game.controller";
 
 const router = express.Router();
 
@@ -31,5 +36,7 @@ router.patch("/bets/:betId", authenticateUser, updateBet);
 // game routes
 router.post("/game", authenticateAdmin, createGame);
 router.patch("/game/:gameId", authenticateAdmin, updateGame);
+router.get("/games", authenticateUser, getAllGames);
+router.get("/game/:gameId", authenticateUser, getGame);
 
 export default router;
