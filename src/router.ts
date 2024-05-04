@@ -7,19 +7,24 @@ import {
   signup,
 } from "./controllers/user.controller";
 import { authenticateAdmin, authenticateUser } from "./middlewares/auth";
-import { createBet, getUserBets } from "./controllers/bet.controller";
+import {
+  createBet,
+  getUserBets,
+  updateBet,
+} from "./controllers/bet.controller";
 
 const router = express.Router();
 
 // user routes
 router.post("/signup", signup);
 router.post("/login", login);
-router.patch("/:userId", authenticateUser, editProfile);
+router.patch("/user/:userId", authenticateUser, editProfile);
 router.patch("/admin/:userId", authenticateAdmin, manageAdminStatus);
-router.delete("/:userId", authenticateUser, deleteUser);
+router.delete("/user/:userId", authenticateUser, deleteUser);
 
 // bet routes
-router.get("/bets", authenticateUser, getUserBets)
-router.post("/bets", authenticateUser, createBet)
+router.get("/bets", authenticateUser, getUserBets);
+router.post("/bets", authenticateUser, createBet);
+router.patch("/bets/:betId", authenticateUser, updateBet);
 
 export default router;
