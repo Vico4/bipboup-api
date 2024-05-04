@@ -8,18 +8,17 @@ import {
 } from "./controllers/user.controller";
 import { authenticateAdmin, authenticateUser } from "./middlewares/auth";
 import {
-  createBet,
-  getUserBets,
-  updateBet,
-} from "./controllers/bet.controller";
-import {
   createGame,
   updateGame,
   getAllGames,
   getGame,
   deleteGame,
 } from "./controllers/game.controller";
-import { createBet, getUserBets } from "./controllers/bet.controller";
+import {
+  createBet,
+  getUserBets,
+  updateBet,
+} from "./controllers/bet.controller";
 
 const router = express.Router();
 
@@ -44,6 +43,7 @@ router.delete("/game/:gameId", authenticateAdmin, deleteGame);
 // bet routes
 router.get("/bets", authenticateUser, getUserBets);
 router.post("/bets", authenticateUser, createBet);
+router.patch("/bets/:betId", authenticateUser, updateBet);
 
 // game routes
 router.post("/game", authenticateAdmin, createGame);
