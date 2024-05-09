@@ -40,15 +40,5 @@ router.patch("/game/:gameId", authenticateAdmin, updateGame);
 router.get("/games", authenticateUser, getAllGames);
 router.get("/game/:gameId", authenticateUser, getGame);
 router.delete("/game/:gameId", authenticateAdmin, deleteGame);
-// bet routes
-router.get("/bets", authenticateUser, getUserBets);
-router.post("/bets", authenticateUser, createBet);
-router.patch("/bets/:betId", authenticateUser, updateBet);
-
-// game routes
-router.post("/game", authenticateAdmin, createGame);
-router.patch("/game/:gameId", authenticateAdmin, updateGame);
-router.get("/games", authenticateUser, getAllGames);
-router.get("/game/:gameId", authenticateUser, getGame);
 
 export default router;
