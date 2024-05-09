@@ -41,7 +41,7 @@ export const createBet = async (
 
     const bet = betCreationSchema.parse(req.body);
 
-    checkBetIsAllowed(bet);
+    await checkBetIsAllowed(bet);
 
     const newBet = new BetModel({
       userId: connectedUser.userId,
@@ -77,7 +77,7 @@ export const updateBet = async (
 
     const betUpdate = betUpdateSchema.parse(req.body);
 
-    checkBetIsAllowed({ gameId: oldBet.gameId, ...betUpdate });
+    await checkBetIsAllowed({ gameId: oldBet.gameId, ...betUpdate });
 
     const updatedBet = await BetModel.findByIdAndUpdate(betId, betUpdate, {
       new: true,

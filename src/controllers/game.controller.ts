@@ -39,6 +39,7 @@ export const updateGame = async (req: Request, res: Response) => {
     let update;
 
     if (updateBody.scoreTeam1 && updateBody.scoreTeam2) {
+      await checkScoresCanBeUpdated(req.params.gameId);
       const pointDifference = Math.abs(
         updateBody.scoreTeam1 - updateBody.scoreTeam2,
       );
@@ -59,10 +60,10 @@ export const updateGame = async (req: Request, res: Response) => {
       throw new Error("game not found");
     }
 
-    // not sure if we do this here or in a separate route we call after updating final score
+    // not sure if we do this here or in a separate route we call after updating final scores
     // todo: either have rule to update scores only once per game or recompute everything on every update
     if (updatedGame.scoreTeam1 !== null && updatedGame.scoreTeam2 !== null) {
-      recomputePoints(updatedGame);
+      await recomputePoints(updatedGame);
     }
 
     res.status(201).json({
@@ -106,6 +107,19 @@ export const deleteGame = async (req: Request, res: Response) => {
     return res.status(200).json(game);
   } catch (error) {
     return res.status(500).json({ error });
+  }
+};
+
+const checkScoresCanBeUpdated = async (gameId: string) => {
+  const game = await GameModel.findById(gameId);
+  if (!game) {
+    throw new Error("Game not found error");
+  }
+  if (new Date() < new Date(game?.startTime)) {
+    throw new Error("Game has not started");
+  }
+  if (game.scoreTeam1 && game.scoreTeam2) {
+    throw new Error("You already entered scores, they cannot be modified");
   }
 };
 
