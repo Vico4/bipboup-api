@@ -20,7 +20,6 @@ export const getRanking = async (
 
 const isRankingFinal = async (): Promise<boolean> => {
   const allGames = await GameModel.find();
-  console.log(allGames);
   for (const game of allGames) {
     if (game.scoreTeam1 === null || game.scoreTeam2 === null) {
       return false;
