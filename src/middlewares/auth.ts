@@ -3,7 +3,7 @@ import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import { AuthenticatedRequestParams } from "../interfaces/authenticatedRequestParams";
 
 export const authenticateAdmin = (
-  req: Request<AuthenticatedRequestParams>,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) => {

@@ -8,6 +8,13 @@ import {
 } from "./controllers/user.controller";
 import { authenticateAdmin, authenticateUser } from "./middlewares/auth";
 import {
+  createGame,
+  updateGame,
+  getAllGames,
+  getGame,
+  deleteGame,
+} from "./controllers/game.controller";
+import {
   createBet,
   getUserBets,
   updateBet,
@@ -30,5 +37,11 @@ router.patch("/bets/:betId", authenticateUser, updateBet);
 
 // ranking routes
 router.get("/ranking", authenticateUser, getRanking);
+// game routes
+router.post("/game", authenticateAdmin, createGame);
+router.patch("/game/:gameId", authenticateAdmin, updateGame);
+router.get("/games", authenticateUser, getAllGames);
+router.get("/game/:gameId", authenticateUser, getGame);
+router.delete("/game/:gameId", authenticateAdmin, deleteGame);
 
 export default router;
