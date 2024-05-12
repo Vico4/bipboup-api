@@ -60,10 +60,13 @@ export const updateGame = async (req: Request, res: Response) => {
       throw new Error("game not found");
     }
 
-    // not sure if we do this here or in a separate route we call after updating final scores
-    // todo: either have rule to update scores only once per game or recompute everything on every update
-    if (updatedGame.scoreTeam1 !== null && updatedGame.scoreTeam2 !== null) {
-      await recomputePoints(updatedGame);
+    if (
+      updatedGame.scoreTeam1 !== null &&
+      updatedGame.scoreTeam2 !== null &&
+      updatedGame.scoreTeam1 !== undefined &&
+      updatedGame.scoreTeam2 !== undefined
+    ) {
+      await recomputePoints(updatedGame as Game);
     }
 
     res.status(201).json({
