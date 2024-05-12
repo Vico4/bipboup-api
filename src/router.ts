@@ -8,17 +8,17 @@ import {
 } from "./controllers/user.controller";
 import { authenticateAdmin, authenticateUser } from "./middlewares/auth";
 import {
-  createBet,
-  getUserBets,
-  updateBet,
-} from "./controllers/bet.controller";
-import {
   createGame,
   updateGame,
   getAllGames,
   getGame,
   deleteGame,
 } from "./controllers/game.controller";
+import {
+  createBet,
+  getUserBets,
+  updateBet,
+} from "./controllers/bet.controller";
 
 const router = express.Router();
 

@@ -6,6 +6,8 @@ import {
   betCreationSchema,
   betUpdateSchema,
 } from "../validation/betValidation.schema";
+import { GameModel } from "../models/game.model";
+import { BetParams } from "../interfaces/bet";
 
 export const getUserBets = async (
   req: Request<AuthenticatedRequestParams>,
@@ -39,6 +41,8 @@ export const createBet = async (
 
     const bet = betCreationSchema.parse(req.body);
 
+    await checkBetIsAllowed(bet);
+
     const newBet = new BetModel({
       userId: connectedUser.userId,
       gameId: bet.gameId,
@@ -71,10 +75,9 @@ export const updateBet = async (
       throw new ForbiddenActionError();
     }
 
-    // todo: validate game has not started yet
-    // validate winner bet is on one of the game's teams
-
     const betUpdate = betUpdateSchema.parse(req.body);
+
+    await checkBetIsAllowed({ gameId: oldBet.gameId, ...betUpdate });
 
     const updatedBet = await BetModel.findByIdAndUpdate(betId, betUpdate, {
       new: true,
@@ -86,5 +89,20 @@ export const updateBet = async (
       return res.status(403).json({ message: error.message });
     }
     res.status(500).send(error);
+  }
+};
+
+const checkBetIsAllowed = async (bet: BetParams): Promise<void> => {
+  const game = await GameModel.findById(bet.gameId);
+  if (!game) {
+    throw new Error("game not found");
+  }
+  const today = new Date();
+  const gameDate = new Date(game?.startTime);
+  if (today >= gameDate) {
+    throw new Error("You can't place a bet after the game has started");
+  }
+  if (bet.winnerBet && ![game.team1, game.team2].includes(bet.winnerBet)) {
+    throw new Error("You are betting on a team who doesn't play this game !");
   }
 };
