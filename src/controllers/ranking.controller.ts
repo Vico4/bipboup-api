@@ -11,7 +11,7 @@ export const getRanking = async (
     const isFinal = await isRankingFinal();
     const users = await UserModel.find()
       .select("derbyName earnedPoints")
-      .sort({ earnedPoints: 1 });
+      .sort({ earnedPoints: -1 });
     res.status(200).json({ isFinal, ranking: users });
   } catch (error) {
     res.status(500).json({ error });
