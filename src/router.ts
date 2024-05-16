@@ -1,4 +1,19 @@
 import express from "express";
+
+import {
+  createBet,
+  getUserBets,
+  updateBet,
+} from "./controllers/bet.controller";
+import {
+  createGame,
+  deleteGame,
+  getAllGames,
+  getGame,
+  recomputeAllPoints,
+  updateGame,
+} from "./controllers/game.controller";
+import { getRanking } from "./controllers/ranking.controller";
 import {
   deleteUser,
   editProfile,
@@ -7,19 +22,6 @@ import {
   signup,
 } from "./controllers/user.controller";
 import { authenticateAdmin, authenticateUser } from "./middlewares/auth";
-import {
-  createGame,
-  updateGame,
-  getAllGames,
-  getGame,
-  deleteGame,
-} from "./controllers/game.controller";
-import {
-  createBet,
-  getUserBets,
-  updateBet,
-} from "./controllers/bet.controller";
-import { getRanking } from "./controllers/ranking.controller";
 
 const router = express.Router();
 
@@ -44,4 +46,5 @@ router.get("/games", authenticateUser, getAllGames);
 router.get("/game/:gameId", authenticateUser, getGame);
 router.delete("/game/:gameId", authenticateAdmin, deleteGame);
 
+router.post("recompute", authenticateAdmin, recomputeAllPoints)
 export default router;
