@@ -18,7 +18,7 @@ export const authenticateAdmin = (
     }
     next();
   } catch (error) {
-    res.status(401).json({ error });
+    res.status(401).json(error);
   }
 };
 
@@ -36,6 +36,6 @@ export const authenticateUser = (
     req.params.connectedUser = user as { userId: string; isAdmin: boolean };
     next();
   } catch (error) {
-    res.status(401).json({ error });
+    res.status(401).json(error);
   }
 };

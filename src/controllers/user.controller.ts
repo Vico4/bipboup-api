@@ -42,7 +42,7 @@ export const signup = async (req: Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof ZodError) {
-      res.status(400).json({ error });
+      res.status(400).json(error.issues[0].message);
     }
     res.status(500).json({ error });
   }
@@ -72,7 +72,7 @@ export const login = async (req: Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof BadLoginError) {
-      return res.status(401).json({ message: error.message });
+      return res.status(401).json(error.message);
     }
     res.status(500).json({ error });
   }
@@ -103,10 +103,10 @@ export const editProfile = async (
       .json({ email: updatedUser.email, derbyName: updatedUser.derbyName });
   } catch (error) {
     if (error instanceof ForbiddenActionError) {
-      return res.status(403).json({ message: error.message });
+      return res.status(403).json(error.message);
     }
     if (error instanceof UserNotFoundError) {
-      return res.status(404).json({ message: error.message });
+      return res.status(404).json(error.message);
     }
     res.status(500).json({ error });
   }
@@ -129,7 +129,7 @@ export const manageAdminStatus = async (req: Request, res: Response) => {
     res.status(200).json(updatedUser);
   } catch (error) {
     if (error instanceof UserNotFoundError) {
-      return res.status(404).json({ message: error.message });
+      return res.status(404).json(error.message);
     }
     res.status(500).json({ error });
   }
@@ -157,10 +157,10 @@ export const deleteUser = async (
     res.status(200).json({ message: deletedUser.derbyName + " deleted" });
   } catch (error) {
     if (error instanceof ForbiddenActionError) {
-      return res.status(403).json({ message: error.message });
+      return res.status(403).json(error.message);
     }
     if (error instanceof UserNotFoundError) {
-      return res.status(404).json({ message: error.message });
+      return res.status(404).json(error.message);
     }
     res.status(500).json({ error });
   }

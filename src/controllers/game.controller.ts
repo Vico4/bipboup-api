@@ -28,7 +28,7 @@ export const createGame = async (req: Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof ZodError) {
-      return res.status(400).json({ error });
+      return res.status(400).json(error.issues[0].message);
     }
     return res.status(500).json({ error });
   }
@@ -75,7 +75,7 @@ export const updateGame = async (req: Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof ZodError) {
-      return res.status(400).json({ error });
+      return res.status(400).json(error.issues[0].message);
     }
     return res.status(500).json({ error });
   }
@@ -177,5 +177,5 @@ export const recomputeAllPoints = async (req: Request, res: Response) => {
     return res.status(200).json({ message: "All points recomputed" });
   } catch (error) {
     return res.status(500).json({ error });
-  } 
-}
+  }
+};

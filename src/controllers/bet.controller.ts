@@ -23,7 +23,7 @@ export const getUserBets = async (
     res.status(200).json(userBets);
   } catch (error) {
     if (error instanceof ForbiddenActionError) {
-      return res.status(403).json({ message: error.message });
+      return res.status(403).json(error.message);
     }
     res.status(500).send(error);
   }
@@ -54,7 +54,7 @@ export const createBet = async (
     res.status(201).json(createdBet);
   } catch (error) {
     if (error instanceof ForbiddenActionError) {
-      return res.status(403).json({ message: error.message });
+      return res.status(403).json(error.message);
     }
     res.status(500).send(error);
   }
@@ -86,7 +86,7 @@ export const updateBet = async (
     res.status(201).json(updatedBet);
   } catch (error) {
     if (error instanceof ForbiddenActionError) {
-      return res.status(403).json({ message: error.message });
+      return res.status(403).json(error.message);
     }
     res.status(500).send(error);
   }
