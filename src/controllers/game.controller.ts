@@ -1,14 +1,15 @@
 import { Request, Response } from "express";
 import { ZodError } from "zod";
+
+import { AuthenticatedRequestParams } from "../interfaces/authenticatedRequestParams";
+import { Game } from "../interfaces/game";
+import { BetModel } from "../models/bet.model";
+import { GameModel } from "../models/game.model";
+import { UserModel } from "../models/user.model";
 import {
   gameCreationSchema,
   gameUpdateSchema,
 } from "../validation/gameValidation.schema";
-import { GameModel } from "../models/game.model";
-import { AuthenticatedRequestParams } from "../interfaces/authenticatedRequestParams";
-import { BetModel } from "../models/bet.model";
-import { Game } from "../interfaces/game";
-import { UserModel } from "../models/user.model";
 
 export const createGame = async (req: Request, res: Response) => {
   try {
@@ -27,7 +28,7 @@ export const createGame = async (req: Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof ZodError) {
-      return res.status(400).json({ error });
+      return res.status(400).json(error.issues[0].message);
     }
     return res.status(500).json({ error });
   }
@@ -74,7 +75,7 @@ export const updateGame = async (req: Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof ZodError) {
-      return res.status(400).json({ error });
+      return res.status(400).json(error.issues[0].message);
     }
     return res.status(500).json({ error });
   }
@@ -156,5 +157,25 @@ const recomputePoints = async (updatedGame: Game) => {
         });
       }
     }
+  }
+};
+
+export const recomputeAllPoints = async (req: Request, res: Response) => {
+  try {
+    const games = await GameModel.find();
+    await UserModel.updateMany({}, { earnedPoints: 0 });
+    for (const game of games) {
+      if (
+        game.scoreTeam1 !== null &&
+        game.scoreTeam2 !== null &&
+        game.scoreTeam1 !== undefined &&
+        game.scoreTeam2 !== undefined
+      ) {
+        await recomputePoints(game as Game);
+      }
+    }
+    return res.status(200).json({ message: "All points recomputed" });
+  } catch (error) {
+    return res.status(500).json({ error });
   }
 };
