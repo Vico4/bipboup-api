@@ -14,7 +14,7 @@ export const getRanking = async (
       .sort({ earnedPoints: -1 });
     res.status(200).json({ isFinal, ranking: users });
   } catch (error) {
-    res.status(500).json({ error });
+    return res.status(500).json({ error });
   }
 };
 

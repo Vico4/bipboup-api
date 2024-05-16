@@ -42,9 +42,9 @@ export const signup = async (req: Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof ZodError) {
-      res.status(400).json(error.issues[0].message);
+      return res.status(400).json(error.issues[0].message);
     }
-    res.status(500).json({ error });
+    return res.status(500).json({ error });
   }
 };
 
@@ -74,7 +74,7 @@ export const login = async (req: Request, res: Response) => {
     if (error instanceof BadLoginError) {
       return res.status(401).json(error.message);
     }
-    res.status(500).json({ error });
+    return res.status(500).json({ error });
   }
 };
 
@@ -108,7 +108,7 @@ export const editProfile = async (
     if (error instanceof UserNotFoundError) {
       return res.status(404).json(error.message);
     }
-    res.status(500).json({ error });
+    return res.status(500).json({ error });
   }
 };
 
@@ -131,7 +131,7 @@ export const manageAdminStatus = async (req: Request, res: Response) => {
     if (error instanceof UserNotFoundError) {
       return res.status(404).json(error.message);
     }
-    res.status(500).json({ error });
+    return res.status(500).json({ error });
   }
 };
 
@@ -162,6 +162,6 @@ export const deleteUser = async (
     if (error instanceof UserNotFoundError) {
       return res.status(404).json(error.message);
     }
-    res.status(500).json({ error });
+    return res.status(500).json({ error });
   }
 };
