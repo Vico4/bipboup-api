@@ -30,7 +30,10 @@ export const createGame = async (req: Request, res: Response) => {
     if (error instanceof ZodError) {
       return res.status(400).json(error.issues[0].message);
     }
-    return res.status(500).json({ error });
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+    }
+    return res.status(500).json(error);
   }
 };
 
@@ -55,6 +58,7 @@ export const updateGame = async (req: Request, res: Response) => {
     const updatedGame = await GameModel.findByIdAndUpdate(
       req.params.gameId,
       update,
+      { new: true },
     );
 
     if (!updatedGame) {
@@ -77,7 +81,10 @@ export const updateGame = async (req: Request, res: Response) => {
     if (error instanceof ZodError) {
       return res.status(400).json(error.issues[0].message);
     }
-    return res.status(500).json({ error });
+    if (error instanceof Error) {
+      return res.status(500).json(error.message);
+    }
+    return res.status(500).json(error);
   }
 };
 
@@ -116,13 +123,16 @@ export const deleteGame = async (req: Request, res: Response) => {
 
 const checkScoresCanBeUpdated = async (gameId: string) => {
   const game = await GameModel.findById(gameId);
+
+  const d = new Date();
+  const today = d.setTime(d.getTime() + 2 * 60 * 60 * 1000);
   if (!game) {
     throw new Error("Game not found error");
   }
-  if (new Date() < new Date(game?.startTime)) {
+  if (new Date(today) < new Date(game?.startTime)) {
     throw new Error("Game has not started");
   }
-  if (game.scoreTeam1 && game.scoreTeam2) {
+  if (game.scoreTeam1 !== null && game.scoreTeam2 !== null) {
     throw new Error("You already entered scores, they cannot be modified");
   }
 };
@@ -133,7 +143,6 @@ const recomputePoints = async (updatedGame: Game) => {
     updatedGame.scoreTeam1 > updatedGame.scoreTeam2
       ? updatedGame.team1
       : updatedGame.team2;
-
   for (const bet of gameBets) {
     if (bet.winnerBet === winner) {
       await UserModel.findByIdAndUpdate(bet.userId, {
