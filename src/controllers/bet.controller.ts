@@ -56,6 +56,9 @@ export const createBet = async (
     if (error instanceof ForbiddenActionError) {
       return res.status(403).json(error.message);
     }
+    if (error instanceof Error) {
+      return res.status(403).json(error.message);
+    }
     return res.status(500).send(error);
   }
 };
@@ -88,6 +91,9 @@ export const updateBet = async (
     if (error instanceof ForbiddenActionError) {
       return res.status(403).json(error.message);
     }
+    if (error instanceof Error) {
+      return res.status(403).json(error.message);
+    }
     return res.status(500).send(error);
   }
 };
@@ -97,9 +103,10 @@ const checkBetIsAllowed = async (bet: BetParams): Promise<void> => {
   if (!game) {
     throw new Error("game not found");
   }
-  const today = new Date();
+  const d = new Date();
+  const today = d.setTime(d.getTime() + 2 * 60 * 60 * 1000);
   const gameDate = new Date(game?.startTime);
-  if (today >= gameDate) {
+  if (new Date(today) >= gameDate) {
     throw new Error("You can't place a bet after the game has started");
   }
   if (bet.winnerBet && ![game.team1, game.team2].includes(bet.winnerBet)) {
