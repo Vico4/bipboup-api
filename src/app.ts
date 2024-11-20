@@ -3,6 +3,7 @@ import cors from "cors";
 import { config } from "dotenv";
 import mongoose from "mongoose";
 import router from "./router";
+import { daytaflow } from "@daytaflow/express-middleware";
 
 const app = express();
 app.use(express.json());
@@ -17,6 +18,8 @@ mongoose
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
+
+app.use(daytaflow({ apiKey: process.env.DAYTAFLOW_API_KEY ?? ''}));
 
 app.use("/", router);
 
