@@ -93,7 +93,7 @@ export const getAllGames = async (
   res: Response,
 ) => {
   try {
-    const games = await GameModel.find();
+    const games = await GameModel.find({startTime: {"$gt": "2025-01-01"}});
     return res.status(200).json(games);
   } catch (error) {
     return res.status(500).json({ error });
