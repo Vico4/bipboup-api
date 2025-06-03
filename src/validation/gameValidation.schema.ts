@@ -1,20 +1,21 @@
 import { z } from "zod";
 
-const teamNames = [
-  "Silly Geez - Tours",
-  "Brutales Deluxe - Annecy",
-  "Mecusa - Metz",
-  "Les Petites Morts - Bordeaux",
-  "Les Amazones - Aix en provence",
-  "Les V'Hermines - Vannes",
-  "La Horde - Orcet",
-  "Les Glorious Batardes - Lomme",
-] as const;
+// Removed team names validation to make 2025 update quickly
+// const teamNames = [
+//   "Silly Geez - Tours",
+//   "Brutales Deluxe - Annecy",
+//   "Mecusa - Metz",
+//   "Les Petites Morts - Bordeaux",
+//   "Les Amazones - Aix en provence",
+//   "Les V'Hermines - Vannes",
+//   "La Horde - Orcet",
+//   "Les Glorious Batardes - Lomme",
+// ] as const;
 
 export const gameCreationSchema = z
   .object({
-    team1: z.enum(teamNames),
-    team2: z.enum(teamNames),
+    team1: z.string(),
+    team2: z.string(),
     startTime: z
       .string()
       .datetime({ offset: true })
@@ -29,8 +30,8 @@ export const gameCreationSchema = z
 
 export const gameUpdateSchema = z
   .object({
-    team1: z.enum(teamNames).optional(),
-    team2: z.enum(teamNames).optional(),
+    team1: z.string().optional(),
+    team2: z.string().optional(),
     startTime: z
       .string()
       .datetime()
