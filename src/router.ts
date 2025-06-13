@@ -6,6 +6,7 @@ import {
   updateBet,
 } from "./controllers/bet.controller";
 import {
+  archiveGames,
   createGame,
   deleteGame,
   getAllGames,
@@ -46,5 +47,7 @@ router.get("/games", authenticateUser, getAllGames);
 router.get("/game/:gameId", authenticateUser, getGame);
 router.delete("/game/:gameId", authenticateAdmin, deleteGame);
 
-router.post("recompute", authenticateAdmin, recomputeAllPoints)
+router.post("/games/archive", authenticateAdmin, archiveGames);
+
+router.post("/recompute", authenticateAdmin, recomputeAllPoints)
 export default router;

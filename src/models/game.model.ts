@@ -7,6 +7,7 @@ const gameSchema = new mongoose.Schema({
   scoreTeam1: { type: Number },
   scoreTeam2: { type: Number },
   pointDifference: { type: Number, required: true },
+  isArchived: { type: Boolean, default: false },
 });
 
 export const GameModel = mongoose.model("Game", gameSchema);

@@ -93,7 +93,7 @@ export const getAllGames = async (
   res: Response,
 ) => {
   try {
-    const games = await GameModel.find({startTime: {"$gt": "2025-01-01"}});
+    const games = await GameModel.find({isArchived: false});
     return res.status(200).json(games);
   } catch (error) {
     return res.status(500).json({ error });
@@ -169,9 +169,19 @@ const recomputePoints = async (updatedGame: Game) => {
   }
 };
 
+export const archiveGames = async (req: Request, res: Response) => {
+  try {
+    await GameModel.updateMany({startTime: {"$lt": req.body.date}}, {isArchived: true});
+    await GameModel.updateMany({startTime: {"$gte": req.body.date}}, {isArchived: false});
+    return res.status(200).json({ message: "Games archived" });
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+};
+
 export const recomputeAllPoints = async (req: Request, res: Response) => {
   try {
-    const games = await GameModel.find();
+    const games = await GameModel.find({isArchived: false});
     await UserModel.updateMany({}, { earnedPoints: 0 });
     for (const game of games) {
       if (
